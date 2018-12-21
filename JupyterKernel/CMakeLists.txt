@@ -5,7 +5,10 @@ set(MODULE_TITLE ${MODULE_NAME})
 
 string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
 
+#set(xeus-python_DIR "c:/D/SlicerJupyter-win64rel/xeus-python-build")
 find_package(xeus REQUIRED)
+find_package(xeus-python REQUIRED)
+find_package(pybind11 REQUIRED)
 
 #-----------------------------------------------------------------------------
 add_subdirectory(Logic)
@@ -42,6 +45,8 @@ set(MODULE_UI_SRCS
 set(MODULE_TARGET_LIBRARIES
   vtkSlicer${MODULE_NAME}ModuleLogic
   xeus
+  xeus-python
+  #pybind11
   )
 
 set(MODULE_RESOURCES

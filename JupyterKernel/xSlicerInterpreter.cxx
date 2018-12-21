@@ -34,6 +34,7 @@
 // in all supported Slicer versions.
 #undef USE_TABLE_PLOT_CONTROLLER
 
+/*
 void xSlicerInterpreter::configure_impl()
 {
   auto handle_comm_opened = [](xeus::xcomm&& comm, const xeus::xmessage&) {
@@ -57,7 +58,7 @@ xjson xSlicerInterpreter::execute_request_impl(int execution_counter,
   const std::string& code,
   bool silent,
   bool store_history,
-  const xjson_node* /* user_expressions */,
+  const xjson_node*, // user_expressions
   bool allow_stdin)
 {
   if (m_print_debug_output)
@@ -324,3 +325,5 @@ void xSlicerInterpreter::input_reply_impl(const std::string& value)
     std::cout << "value: " << value << std::endl;
   }
 }
+
+*/

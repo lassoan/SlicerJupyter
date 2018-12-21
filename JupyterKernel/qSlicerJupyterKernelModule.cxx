@@ -44,6 +44,7 @@
 // XEUS includes
 #include "xeus/xkernel.hpp"
 #include "xeus/xkernel_configuration.hpp"
+#include <xeus-python/xinterpreter.hpp>
 
 #include "xSlicerInterpreter.h"
 #include "xSlicerServer.h"
@@ -418,9 +419,16 @@ void qSlicerJupyterKernelModule::startKernel(const QString& connectionFile)
   {
     d->Config = xeus::load_configuration(connectionFile.toStdString());
 
+
+    //py::scoped_interpreter guard;
+    //using interpreter_ptr = std::unique_ptr<xpyt::interpreter>;
+    //interpreter_ptr interpreter = interpreter_ptr(new xpyt::interpreter(argc, argv));
+
     using interpreter_ptr = std::unique_ptr<xSlicerInterpreter>;
-    interpreter_ptr interpreter = interpreter_ptr(new xSlicerInterpreter());
-    d->Kernel = new xeus::xkernel(d->Config, "slicer", std::move(interpreter), make_xSlicerServer);
+    interpreter_ptr interpreter = interpreter_ptr(new xSlicerInterpreter(0,nullptr));
+    d->Kernel = new xeus::xkernel(d->Config, "slicer", std::move(interpreter),
+      xeus::xkernel::history_manager_ptr(new xeus::xin_memory_history_manager()),
+      make_xSlicerServer);
 
     d->Kernel->start();
 

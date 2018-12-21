@@ -20,6 +20,7 @@ set(proj ${SUPERBUILD_TOPLEVEL_PROJECT})
 set(${proj}_DEPENDS
    xeus
    python-jedi
+   xeus-python
    )
 
 ExternalProject_Include_Dependencies(${proj}
