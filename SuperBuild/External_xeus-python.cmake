@@ -20,13 +20,15 @@ if(NOT DEFINED ${proj}_DIR AND NOT ${CMAKE_PROJECT_NAME}_USE_SYSTEM_${proj})
 
   ExternalProject_SetIfNotDefined(
     ${CMAKE_PROJECT_NAME}_${proj}_GIT_REPOSITORY
-    "${EP_GIT_PROTOCOL}://github.com/QuantStack/xeus-python.git"
+    #"${EP_GIT_PROTOCOL}://github.com/QuantStack/xeus-python.git"
+    "${EP_GIT_PROTOCOL}://github.com/lassoan/xeus-python.git"
     QUIET
     )
 
   ExternalProject_SetIfNotDefined(
     ${CMAKE_PROJECT_NAME}_${proj}_GIT_TAG
-    master #"dfca7176e3ae8cf880dab8786b71414238a8f215" # master
+    #"dfca7176e3ae8cf880dab8786b71414238a8f215" # master
+    slicer
     QUIET
     )
 
@@ -59,6 +61,7 @@ if(NOT DEFINED ${proj}_DIR AND NOT ${CMAKE_PROJECT_NAME}_USE_SYSTEM_${proj})
       # Options
       -DBUILD_TESTING:BOOL=OFF
       # Python
+      -DXEUS_PYTHON_EMBEDDED:BOOL=OFF
       -DPYTHON_EXECUTABLE:PATH=${PYTHON_EXECUTABLE}
       -DPYTHONLIBS_FOUND:BOOL=ON
       -DPYTHON_MODULE_EXTENSION:STRING=.pyd
