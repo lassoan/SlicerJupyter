@@ -26,7 +26,7 @@ if(NOT DEFINED ${proj}_DIR AND NOT ${CMAKE_PROJECT_NAME}_USE_SYSTEM_${proj})
 
   ExternalProject_SetIfNotDefined(
     ${CMAKE_PROJECT_NAME}_${proj}_GIT_TAG
-    "dfca7176e3ae8cf880dab8786b71414238a8f215" # master
+    master #"dfca7176e3ae8cf880dab8786b71414238a8f215" # master
     QUIET
     )
 
@@ -61,6 +61,7 @@ if(NOT DEFINED ${proj}_DIR AND NOT ${CMAKE_PROJECT_NAME}_USE_SYSTEM_${proj})
       # Depdendencies
       -Dnlohmann_json_DIR:PATH=${nlohmann_json_DIR}
       -Dxtl_DIR:PATH=${xtl_DIR}
+      -Dzeromq_DIR:PATH=${ZeroMQ_DIR}
       -DZeroMQ_DIR:PATH=${ZeroMQ_DIR}
       -Dcppzmq_DIR:PATH=${cppzmq_DIR}
       -Dcryptopp_DIR:PATH=${cryptopp_DIR}

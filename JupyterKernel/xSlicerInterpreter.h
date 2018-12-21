@@ -1,25 +1,31 @@
 #ifndef xSlicerInterpreter_h
 #define xSlicerInterpreter_h
 
-#include <xeus/xinterpreter.hpp>
+#include <xeus-python/xinterpreter.hpp>
 
 #include <QStringList>
 
-using xeus::xinterpreter;
+//using xeus::xinterpreter;
+using xpyt::interpreter;
 using xeus::xjson;
-using xeus::xjson_node;
-using xeus::xhistory_arguments;
+//using xeus::xjson_node;
+//using xeus::xhistory_arguments;
 
-class xSlicerInterpreter : public xinterpreter
+class xSlicerInterpreter : public interpreter
 {
 
 public:
 
-    xSlicerInterpreter() = default;
+    //xSlicerInterpreter() = default;
+  xSlicerInterpreter(int argc, const char* const* argv)
+    : interpreter(argc,argv)
+  {
+  }
     virtual ~xSlicerInterpreter() = default;
 
 private:
 
+    /*
     void configure_impl() override;
 
     xjson execute_request_impl(int execution_counter,
@@ -54,6 +60,7 @@ private:
     QStringList m_captured_stderr;
 
     bool m_print_debug_output = false;
+    */
 };
 
 #endif

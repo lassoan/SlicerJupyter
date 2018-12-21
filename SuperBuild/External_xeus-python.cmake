@@ -1,8 +1,8 @@
 
-set(proj xtl)
+set(proj xeus-python)
 
 # Set dependency list
-set(${proj}_DEPENDS "")
+set(${proj}_DEPENDS ZeroMQ xeus xtl nlohmann_json cppzmq pybind11)
 
 # Include dependent projects if any
 ExternalProject_Include_Dependencies(${proj} PROJECT_VAR proj)
@@ -12,26 +12,26 @@ if(${CMAKE_PROJECT_NAME}_USE_SYSTEM_${proj})
 endif()
 
 # Sanity checks
-if(DEFINED xtl_DIR AND NOT EXISTS ${xtl_DIR})
-  message(FATAL_ERROR "xtl_DIR variable is defined but corresponds to nonexistent directory")
+if(DEFINED ${${proj}_DIR}_DIR AND NOT EXISTS ${${proj}_DIR})
+  message(FATAL_ERROR "${proj}_DIR variable is defined but corresponds to nonexistent directory")
 endif()
 
 if(NOT DEFINED ${proj}_DIR AND NOT ${CMAKE_PROJECT_NAME}_USE_SYSTEM_${proj})
 
   ExternalProject_SetIfNotDefined(
     ${CMAKE_PROJECT_NAME}_${proj}_GIT_REPOSITORY
-    "${EP_GIT_PROTOCOL}://github.com/QuantStack/xtl.git"
+    "${EP_GIT_PROTOCOL}://github.com/QuantStack/xeus-python.git"
     QUIET
     )
 
   ExternalProject_SetIfNotDefined(
     ${CMAKE_PROJECT_NAME}_${proj}_GIT_TAG
-    "0.5.0"
+    master #"dfca7176e3ae8cf880dab8786b71414238a8f215" # master
     QUIET
     )
 
   set(EP_SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj})
-  set(EP_BINARY_DIR ${CMAKE_BINARY_DIR}/${proj}-build)    
+  set(EP_BINARY_DIR ${CMAKE_BINARY_DIR}/${proj}-build)
 
   ExternalProject_Add(${proj}
     ${${proj}_EP_ARGS}
@@ -53,15 +53,39 @@ if(NOT DEFINED ${proj}_DIR AND NOT ${CMAKE_PROJECT_NAME}_USE_SYSTEM_${proj})
       -DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_BINARY_DIR}/${Slicer_THIRDPARTY_LIB_DIR}
       -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
       # Install directories
-      -Dxtl_INSTALL_RUNTIME_DIR:STRING=${Slicer_INSTALL_THIRDPARTY_LIB_DIR}
-      -Dxtl_INSTALL_LIBRARY_DIR:STRING=${Slicer_INSTALL_THIRDPARTY_LIB_DIR}
+      -Dxeus_INSTALL_RUNTIME_DIR:STRING=${Slicer_INSTALL_THIRDPARTY_LIB_DIR}
+      -Dxeus_INSTALL_LIBRARY_DIR:STRING=${Slicer_INSTALL_THIRDPARTY_LIB_DIR}
+      -DCMAKE_INSTALL_LIBDIR:STRING=lib # Skip default initialization by GNUInstallDirs CMake module
       # Options
       -DBUILD_TESTING:BOOL=OFF
+      # Python
+      -DPYTHON_EXECUTABLE:PATH=${PYTHON_EXECUTABLE}
+      -DPYTHONLIBS_FOUND:BOOL=ON
+      -DPYTHON_MODULE_EXTENSION:STRING=.pyd
+      -DPYTHON_INCLUDE_DIR:PATH=${PYTHON_INCLUDE_DIR}
+      -DPYTHON_LIBRARY:PATH=${PYTHON_LIBRARY}
+
+      # Dependencies
+      -Dxeus_DIR:PATH=${xeus_DIR}
+      -Dxtl_DIR:PATH=${xtl_DIR}
+      -Dzeromq_DIR:PATH=${ZeroMQ_DIR}
+      -DZeroMQ_DIR:PATH=${ZeroMQ_DIR}
+      -Dnlohmann_json_DIR:PATH=${nlohmann_json_DIR}
+      -Dcppzmq_DIR:PATH=${cppzmq_DIR}
+      -Dpybind11_DIR:PATH=${pybind11_DIR}
+      #-Dpybind11_DIR:PATH=${CMAKE_BINARY_DIR}/pybind11-install/share/cmake/pybind11
     INSTALL_COMMAND ""
     DEPENDS
       ${${proj}_DEPENDS}
     )
   set(${proj}_DIR ${CMAKE_BINARY_DIR}/${proj}-build)
+
+  #if(APPLE)
+  #   ExternalProject_Add_Step(${proj} fix_rpath
+  #     COMMAND install_name_tool -id ${CMAKE_BINARY_DIR}/${Slicer_THIRDPARTY_LIB_DIR}/libxeus.1.dylib ${CMAKE_BINARY_DIR}/${Slicer_THIRDPARTY_LIB_DIR}/libxeus.1.dylib
+  #     DEPENDEES install
+  #     )
+  #endif()
 
 else()
   ExternalProject_Add_Empty(${proj} DEPENDS ${${proj}_DEPENDS})
